@@ -11,6 +11,8 @@
 // $.html(), $.text(), etc.
 // keyup events could be helpful to get value of field as the user types
 
+//for test commit
+
 (function() {
 	// Magic!
 	console.log('Keepin\'n it clean with an external script!');
