@@ -16,4 +16,39 @@
 (function() {
 	// Magic!
 	console.log('Keepin\'n it clean with an external script!');
+   // first bind the new character event to a function
+   items = null;
+   $.get({
+      url: "http://www.mattbowytz.com/simple_api.json",
+      data: {
+         "data": "programming"
+      },
+      success: function(data) {
+         console.log(data);
+         items = data.data;
+      }
+   });
+   console.log(items);
+   var input = jQuery('#search-id');
+   input.on('keyup', function(){
+      var query = input.val();
+      for (i = 0; i < items.length; i++) {
+         var item = items[i].toLowerCase();
+         if (item.indexOf(query) === 0) {
+            console.log(item);
+         }
+      }
+   });
+   //var input = document.getElementById('search-id');
+   //input.addEventListener('keyup',keyStroke());
+   
+   
+   
+   // this function then creates a HTTPRequest with data=<contents of dropdown>, text=<contents of input box>
+   // receive JSONresponse, 
 })();
+
+function keyStroke(){
+   console.log('fsdf');
+}
+
