@@ -17,60 +17,69 @@
 	// Magic!
 	console.log('Keepin\'n it clean with an external script!');
    // first bind the new character event to a function
-   items = null;
+   
+   items = null;   
+   var topic = jQuery('#select-id');
+   var input = jQuery('#search-id');
+   var dataTopic;
+   var displayItems = "";
+   var display = document.getElementById("display-id");
+   
+   //call get function
+   get();
+   
+   //update items being searched for when a topic is selected
+   //calls the get() function
+   topic.change(function(){get()});
+   
+   //console.log("input: " + input);
+   input.on('keyup', function(){
+      displayItems = "";
+      var query = input.val();
+      for (i = 0; i < items.length; i++) {
+         var item = items[i].toLowerCase();
+         if (item.indexOf(query) === 0) {
+            //console.log("new item: " + item);
+            //console.log("query: " + query);
+            if (query != ""){
+               displayItems = displayItems + item + "<br />";
+            }
+         }
+      }
+      //update contents in div on html page
+      if(display){
+         display.innerHTML = displayItems;
+      }
+   });
+   
+   // this function then creates a HTTPRequest with data=<contents of dropdown>, text=<contents of input box>
+   // receive JSONresponse, 
+})();
+
+/**
+ * calls $.get()
+ * no params
+ * no return
+ */
+function get(){
+   var topic = jQuery('#select-id');
    $.get({
       url: "http://www.mattbowytz.com/simple_api.json",
       data: {
-         "data": "all"
+         "data": topic.val()
       },
       success: function(data) {
          console.log("data: " + data);
          items = data.data;
          console.log("items: " + items);
          if (items.constructor === Object){
-            items = $.merge(data.data.interests,data.data.programming);
+            //merge both programming and interest Objects
+            items = $.merge(data.data.interests, data.data.programming);
             console.log("items2: " + items);
          }
             
       }
    });
-   console.log("OG items: " + items);
-   var input = jQuery('#search-id');
-   var displayItems = " ";   
-   var testing = jQuery('#test');
-   var display = document.getElementById("test");
-   console.log("input: " + input);
-   input.on('keyup', function(){
-      displayItems = " ";
-      var query = input.val();
-      for (i = 0; i < items.length; i++) {
-         var item = items[i].toLowerCase();
-         if (item.indexOf(query) === 0) {
-            console.log("new item: " + item);
-            console.log("query: " + query);
-            if (query != ""){
-               displayItems = displayItems + item + "<br />";
-            }
-            //testing.show( "fold", 1000 );
-            //item.show();
-         }
-      }
-      console.log("array: " + displayItems);
-      //$('#test').append(displayItems);
-      if(display){
-         display.innerHTML = displayItems;
-      }
-   });
-   //var input = document.getElementById('search-id');
-   //input.addEventListener('keyup',keyStroke());
-   
-   
-   
-   // this function then creates a HTTPRequest with data=<contents of dropdown>, text=<contents of input box>
-   // receive JSONresponse, 
-})();
-
-function keyStroke(){
-   console.log('fsdf');
 }
+
 
