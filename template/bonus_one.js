@@ -21,22 +21,44 @@
    $.get({
       url: "http://www.mattbowytz.com/simple_api.json",
       data: {
-         "data": "programming"
+         "data": "all"
       },
       success: function(data) {
-         console.log(data);
+         console.log("data: " + data);
          items = data.data;
+         console.log("items: " + items);
+         if (items.constructor === Object){
+            items = $.merge(data.data.interests,data.data.programming);
+            console.log("items2: " + items);
+         }
+            
       }
    });
-   console.log(items);
+   console.log("OG items: " + items);
    var input = jQuery('#search-id');
+   var displayItems = " ";   
+   var testing = jQuery('#test');
+   var display = document.getElementById("test");
+   console.log("input: " + input);
    input.on('keyup', function(){
+      displayItems = " ";
       var query = input.val();
       for (i = 0; i < items.length; i++) {
          var item = items[i].toLowerCase();
          if (item.indexOf(query) === 0) {
-            console.log(item);
+            console.log("new item: " + item);
+            console.log("query: " + query);
+            if (query != ""){
+               displayItems = displayItems + item + "<br />";
+            }
+            //testing.show( "fold", 1000 );
+            //item.show();
          }
+      }
+      console.log("array: " + displayItems);
+      //$('#test').append(displayItems);
+      if(display){
+         display.innerHTML = displayItems;
       }
    });
    //var input = document.getElementById('search-id');
