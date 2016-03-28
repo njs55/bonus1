@@ -69,13 +69,13 @@ function get(){
          "data": topic.val()
       },
       success: function(data) {
-         console.log("data: " + data);
+         //console.log("data: " + data);
          items = data.data;
-         console.log("items: " + items);
+         //console.log("items: " + items);
          if (items.constructor === Object){
             //merge both programming and interest Objects
             items = $.merge(data.data.interests, data.data.programming);
-            console.log("items2: " + items);
+            //console.log("items2: " + items);
          }
             
       }
