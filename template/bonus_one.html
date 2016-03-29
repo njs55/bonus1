@@ -15,19 +15,16 @@
 				<div class="flexsearch-input-wrapper">
 					<input class="flexsearch-input" type="search" id="search-id" name="search-name" placeholder="search">
 				</div>
-            <fieldset class="form-group">
-               <label for="select-id">Select Search Topic</label>
-               <select name="inputFinish" class="form-control" id="select-id">
-                  <option value="all">All</option>
-                  <option value="interests">Interests</option>
-                  <option value="programming">Programming</option>
-               </select>
-            </fieldset>
+         <select name="inputFinish" class="form-control" id="select-id">
+            <option value="all">All</option>
+            <option value="interests">Interests</option>
+            <option value="programming">Programming</option>
+         </select>
 				<input class="flexsearch-submit" type="submit" value="&#10140;"/>
 			</form>
 		</div>
 	</div>
-   <div id="display-id" class="div-test"></div>
+   <div id="filtered-list"></div>
 
 
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>

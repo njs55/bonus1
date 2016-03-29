@@ -14,72 +14,64 @@
 //for test commit
 
 (function() {
-	// Magic!
-	console.log('Keepin\'n it clean with an external script!');
-   // first bind the new character event to a function
-   
-   items = null;   
-   var topic = jQuery('#select-id');
+   // global variable holding our API response data
+   data = {}
+   // elements to which we bind our events
+   var select = jQuery('#select-id');
    var input = jQuery('#search-id');
-   var dataTopic;
-   var displayItems = "";
-   var display = document.getElementById("display-id");
-   
-   //call get function
-   get();
-   
-   //update items being searched for when a topic is selected
-   //calls the get() function
-   topic.change(function(){get()});
-   
-   //console.log("input: " + input);
+   var list = jQuery('#filtered-list');
+   // bind input text change to function filtering list
    input.on('keyup', function(){
-      displayItems = "";
       var query = input.val();
-      for (i = 0; i < items.length; i++) {
-         var item = items[i].toLowerCase();
-         if (item.indexOf(query) === 0) {
-            //console.log("new item: " + item);
-            //console.log("query: " + query);
-            if (query != ""){
-               displayItems = displayItems + item + "<br />";
+      list.empty();
+      // iterate over all of the topics in the dataset
+      for (var topic in data) {
+         var items = data[topic];
+         var filtered = [];
+         // iterate over all of the items in the topic
+         for (var i = 0; i < items.length; i++) {
+            var item = items[i].toLowerCase();
+            // check to see if the query is a prefix of the item
+            if (item.indexOf(query) === 0) {
+               filtered.push('<li><a href="http://google.com/?gws_rd=ssl#q=' + item + '">' + item + '</li>');
             }
          }
-      }
-      //update contents in div on html page
-      if(display){
-         display.innerHTML = displayItems;
-      }
-   });
-   
-   // this function then creates a HTTPRequest with data=<contents of dropdown>, text=<contents of input box>
-   // receive JSONresponse, 
-})();
-
-/**
- * calls $.get()
- * no params
- * no return
- */
-function get(){
-   var topic = jQuery('#select-id');
-   $.get({
-      url: "http://www.mattbowytz.com/simple_api.json",
-      data: {
-         "data": topic.val()
-      },
-      success: function(data) {
-         //console.log("data: " + data);
-         items = data.data;
-         //console.log("items: " + items);
-         if (items.constructor === Object){
-            //merge both programming and interest Objects
-            items = $.merge(data.data.interests, data.data.programming);
-            //console.log("items2: " + items);
+         // if there are any hits from this topic, let's print them
+         if (filtered.length > 0) {
+            list.append('<strong>' + topic + '</strong>');
+            var ul = jQuery('<ul></ul>');
+            ul.append(filtered.sort());
+            list.append(ul);
          }
-            
+      }
+      // if there are no hits in any topic, display a message
+      if (list.is(':empty')) {
+         list.append('<strong>No results.</strong>');
       }
    });
-}
+   // bind topic select change to function fetching API data
+   select.on('change', function() {
+      topic = select.val();
+      $.ajax({
+         url: 'http://www.mattbowytz.com/simple_api.json',
+         data: {
+            'data': topic
+         },
+         success: function(response) {
+            // set the data using the response data
+            if (topic === 'all') {
+               data = response.data;
+            } else {
+               data = {}
+               data[topic] = response.data;
+            }
+            // trigger an event on the input box to render unfiltered list
+            $('#search-id').trigger('keyup');
+         }
+      });
+   });
+   // trigger the change event at load up to fetch the default data
+   select.trigger('change');
+})();
 
 
